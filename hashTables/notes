@@ -1,0 +1,82 @@
+Object
+    -maintain a set of items, each item has a key
+        -insert(item): (overwrite any existing key)
+        -delete(item)
+        -search(item): return item with given key || report key doesn't exist
+
+O(log(n)) via AVL => O(1)
+
+Obj[key] ~ search
+Obj[key] = val ~ insert
+Obj[key] = null ~ delete
+
+item = [key, val]
+
+Motivation:
+    -fastest way to search
+    -in every database
+    -compilers & interpreters
+    -network router/server
+
+    -substring search ex: ctrl F
+    -string commonalities
+    -file and directory synchronization ex: dropbox
+
+Simple approach:
+    -Direct access table
+    -store items in array
+    -indexed by key
+
+    Badness:
+        1)keys may not be integers
+        2)gigantic memory hog
+
+    Solution to (1): prehash
+        -maps keys to noneg int
+        -in theory: keys are finite and discrete
+            -string of bits
+
+            -hash (x) is the prehash of x
+            -hash("\0B") === hash("\0\0C")
+            -ideally hash(x) === hash(y) only if x === y
+
+    Solution to (2): hashing
+        -reduce universe of all keys (int) down to reasonable size for table
+        -idea: memory O(n)
+            -proportional to size of table
+
+        -collisions:
+            -hash(k(i)) === hash(k(j)) but k(i) != k(j)
+        
+Chaining:
+    -if you have multiple items that have same hash value store as list(linked list)
+    -worst case: O(n)
+
+Simple Uniform hashing:
+    -each key is equally likely to be hashed to any slot of the table 
+    independent of where other keys hashing
+
+    -Analysis:
+        -expected length of a Chaining
+        -for n keys and m slots
+            -n/m = loadFactor
+            = O(1) if m = O(n) => runningTime = O(1 + lengthChain)
+
+Hash Functions:
+    1) division method:
+        h(k) = k % m
+            -if m is prime and not close to power of 2 or 10
+
+    2) multiplication method:
+        h(k) = [(a * k) % 2^w] >> (w - r)
+            -assuming in a W bit machine
+            -m =  2^r
+            -a is odd and not to power of 2 or 10
+
+    3) universal hashing:
+        h(k) = [(ak + b) % p] % m
+            -p is prime > universe(length of table)
+            -a & b are random between 0 and p-1
+
+            -for worst case keys k(1) & k(2)
+                -probability of h(k(1)) === h(k(2)) is 1/m
